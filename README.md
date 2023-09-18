@@ -9,6 +9,8 @@ Create an application based on the Tradernet broker's API for monitoring the bro
 __Used technologies__
 
 C++
+
 Qt
+
 TradernetAPI(https://tradernet.global/tradernet-api/auth-api) 
 
