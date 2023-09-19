@@ -1,4 +1,4 @@
-# Password Manager
+# Tradernet Widget
 
 ***
 __Idea__
