@@ -10,6 +10,8 @@ __Used technologies__
 
 C++
 
+Python
+
 Qt
 
 TradernetAPI(https://tradernet.global/tradernet-api/auth-api) 

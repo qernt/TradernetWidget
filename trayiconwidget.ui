@@ -1,58 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>trayIconWidget</class>
- <widget class="QWidget" name="trayIconWidget">
+ <class>TrayIconWidget</class>
+ <widget class="QWidget" name="TrayIconWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>364</width>
-    <height>257</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>AAPL</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>COST</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>TODAY</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_9">
-       <property name="text">
-        <string>YESTERDAY</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_10">
-       <property name="text">
-        <string>ALL-TIME</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -85,6 +46,45 @@
      </item>
      <item>
       <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>ALL-TIME</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>AAPL</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_12">
+       <property name="text">
+        <string>COST</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_13">
+       <property name="text">
+        <string>TODAY</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_14">
+       <property name="text">
+        <string>YESTERDAY</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_15">
        <property name="text">
         <string>ALL-TIME</string>
        </property>
@@ -132,37 +132,37 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="label_11">
+      <widget class="QLabel" name="label_6">
        <property name="text">
         <string>AAPL</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_12">
+      <widget class="QLabel" name="label_7">
        <property name="text">
         <string>COST</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_13">
+      <widget class="QLabel" name="label_8">
        <property name="text">
         <string>TODAY</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_14">
+      <widget class="QLabel" name="label_9">
        <property name="text">
         <string>YESTERDAY</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_15">
+      <widget class="QLabel" name="label_10">
        <property name="text">
         <string>ALL-TIME</string>
        </property>

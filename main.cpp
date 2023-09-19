@@ -1,24 +1,15 @@
-#include "mainwindow.h"
 #include "trayiconwidget.h"
 
 #include <QApplication>
 #include <QSystemTrayIcon>
 #include <QMenu>
-#include <QLabel>
-#include <QGridLayout>
 #include <QWidgetAction>
-#include <Python.h>
-
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    Py_Initialize();
-
-    MainWindow mainWindow;
-
-    trayIconWidget* trayIconW = new trayIconWidget();
+    TrayIconWidget* trayIconWidget = new TrayIconWidget();
 
     QSystemTrayIcon trayIcon(QIcon("faviconV2.png"));
     trayIcon.show();
@@ -26,7 +17,7 @@ int main(int argc, char *argv[])
     QMenu trayMenu;
 
     QWidgetAction* widgetAction = new QWidgetAction(nullptr);
-    widgetAction->setDefaultWidget(trayIconW);
+    widgetAction->setDefaultWidget(trayIconWidget);
 
     trayMenu.addAction(widgetAction);
 

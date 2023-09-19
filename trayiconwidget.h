@@ -3,20 +3,27 @@
 
 #include <QWidget>
 
+#include "settingswidget.h"
+
+
 namespace Ui {
-class trayIconWidget;
+class TrayIconWidget;
 }
 
-class trayIconWidget : public QWidget
+class TrayIconWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit trayIconWidget(QWidget *parent = nullptr);
-    ~trayIconWidget();
+    explicit TrayIconWidget(QWidget *parent = nullptr);
+    ~TrayIconWidget();
+
+private slots:
+    void on_pushButton_clicked();
 
 private:
-    Ui::trayIconWidget *ui;
+    Ui::TrayIconWidget *ui;
+    SettingsWidget *settingsWidget;
 };
 
 #endif // TRAYICONWIDGET_H
