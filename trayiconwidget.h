@@ -2,9 +2,7 @@
 #define TRAYICONWIDGET_H
 
 #include <QWidget>
-
-#include "settingswidget.h"
-
+#include <QSettings>
 
 namespace Ui {
 class TrayIconWidget;
@@ -18,12 +16,24 @@ public:
     explicit TrayIconWidget(QWidget *parent = nullptr);
     ~TrayIconWidget();
 
-private slots:
-    void on_pushButton_clicked();
+    QString getPublicKey() const;
+    void setPublicKey();
+
+    QString getPrivateKey() const;
+    void setPrivateKey();
+
+private:
+    void requestToAPI();
+
+private:
+    QString publicKey;
+    QString privateKey;
+
+public:
+    QSettings* settings;
 
 private:
     Ui::TrayIconWidget *ui;
-    SettingsWidget *settingsWidget;
 };
 
 #endif // TRAYICONWIDGET_H

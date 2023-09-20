@@ -14,6 +14,7 @@ SOURCES += \
     trayiconwidget.cpp
 
 HEADERS += \
+    json.hpp \
     settingswidget.h \
     trayiconwidget.h
 
