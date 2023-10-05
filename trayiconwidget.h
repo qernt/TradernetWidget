@@ -2,7 +2,11 @@
 #define TRAYICONWIDGET_H
 
 #include <QWidget>
+#include <QVBoxLayout>
 #include <QSettings>
+#include <mutex>
+#include <vector>
+
 
 namespace Ui {
 class TrayIconWidget;
@@ -16,24 +20,23 @@ public:
     explicit TrayIconWidget(QWidget *parent = nullptr);
     ~TrayIconWidget();
 
-    QString getPublicKey() const;
-    void setPublicKey();
-
-    QString getPrivateKey() const;
-    void setPrivateKey();
-
 private:
-    void requestToAPI();
-
-private:
-    QString publicKey;
-    QString privateKey;
+    QByteArray requestToAPI();
+    std::vector<std::vector<QString>> parsingJSON(QByteArray JSON);
+    void loadDataFromAPI();
 
 public:
     QSettings* settings;
 
+private slots:
+    void createNewPole(QString ticker, QString value, QString forYesterday,QString forAnEntierPeriod, QString currency);
+
+signals:
+    void newPosition(QString ticker, QString value, QString forYesterday,QString forAnEntierPeriod, QString currency);
+
 private:
     Ui::TrayIconWidget *ui;
+    QVBoxLayout *scrollLayout;
 };
 
 #endif // TRAYICONWIDGET_H
