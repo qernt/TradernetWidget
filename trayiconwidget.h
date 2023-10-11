@@ -21,22 +21,25 @@ public:
     ~TrayIconWidget();
 
 private:
-    QByteArray requestToAPI();
-    std::vector<std::vector<QString>> parsingJSON(QByteArray JSON);
-    void loadDataFromAPI();
+    QByteArray requestToTradernetAPI();
+    std::vector<std::vector<QString>> parseTradernetResponse(QByteArray JSON);
+    void initializeOpenPositions();
+    std::vector<float> parseFinhubResponse(std::string response);
+    std::string getDataAboutPositionsFromFinhub(std::string ticker);
+    QPixmap getPositionLogo(QString ticker);
 
 public:
     QSettings* settings;
 
 private slots:
-    void createNewPole(QString ticker, QString value, QString forYesterday,QString forAnEntierPeriod, QString currency);
+    void createNewPole(QString ticker, QString value,QString forToday, QString forYesterday,QString forAnEntierPeriod);
 
 signals:
-    void newPosition(QString ticker, QString value, QString forYesterday,QString forAnEntierPeriod, QString currency);
+    void newPosition(QString ticker, QString value,QString forToday, QString forYesterday,QString forAnEntierPeriod);
 
 private:
     Ui::TrayIconWidget *ui;
-    QVBoxLayout *scrollLayout;
+    QGridLayout *scrollLayout;
 };
 
 #endif // TRAYICONWIDGET_H

@@ -1,5 +1,7 @@
 QT       += core gui
 QT += core gui network
+LIBS += -lcurl
+
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -12,18 +14,15 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    openpositionfield.cpp \
     settingswidget.cpp \
     trayiconwidget.cpp
 
 HEADERS += \
     json.hpp \
-    openpositionfield.h \
     settingswidget.h \
     trayiconwidget.h
 
 FORMS += \
-    openpositionfield.ui \
     settingswidget.ui \
     trayiconwidget.ui
 

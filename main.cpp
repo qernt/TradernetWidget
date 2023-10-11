@@ -19,6 +19,9 @@ int main(int argc, char *argv[])
 
     QMenu trayMenu;
 
+    trayMenu.setStyleSheet("QMenu::item { width: 20px; }");
+
+
     QWidgetAction* widgetAction = new QWidgetAction(nullptr);
     widgetAction->setDefaultWidget(trayIconWidget);
 
@@ -37,6 +40,8 @@ int main(int argc, char *argv[])
     QAction quitAction("Quit", &a);
     QObject::connect(&quitAction, &QAction::triggered, &a, &QApplication::quit);
     trayMenu.addAction(&quitAction);
+
+    trayMenu.update();
 
     return a.exec();
 }
