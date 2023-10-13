@@ -4,7 +4,6 @@
 #include "settingswidget.h"
 #include <unistd.h>
 #include <QProcess>
-#include <QTimer>
 #include <thread>
 #include <QLabel>
 #include <QtNetwork>
@@ -13,33 +12,74 @@
 #include <curl/curl.h>
 #include <cmath>
 
-
 struct PositionField{
     QString ticker;
     int quantity;
+    float openBalance;
 
     QLabel *labelLogo;
     QLabel *labelTicker;
     QLabel *labelValue;
+    float oldValue;
     QLabel *labelForToday;
-    QLabel *labelForYessterday;
-    QLabel *labelForAnEntierPeriod;
+    float oldForToday;
+    QLabel *labelForYesterday;
+    QLabel *labelForAnEntirePeriod;
+    float oldForEntirePeriod;
 
-    PositionField(QString Ticker, QLabel *LabelLogo = nullptr,QLabel *LabelTicker = nullptr, QLabel *LabelValue = nullptr, QLabel *LabelForToday = nullptr, QLabel *LabelForYessterday = nullptr, QLabel *LabelForAnEntierPeriod = nullptr, int Quantity = 0){
+    PositionField(QString Ticker, QLabel *LabelLogo = nullptr,QLabel *LabelTicker = nullptr, QLabel *LabelValue = nullptr, QLabel *LabelForToday = nullptr, QLabel *LabelForYesterday = nullptr, QLabel *LabelForAnEntirePeriod = nullptr, int Quantity = 0, float OpenBalance = 0){
         ticker = Ticker;
         labelLogo = LabelLogo;
         labelTicker = LabelTicker;
+        labelTicker->setAlignment(Qt::AlignCenter);
+
         labelValue = LabelValue;
+        labelValue->setAlignment(Qt::AlignCenter);
+
         labelForToday = LabelForToday;
-        labelForYessterday = LabelForYessterday;
-        labelForAnEntierPeriod = LabelForAnEntierPeriod;
+        labelForToday->setAlignment(Qt::AlignCenter);
+        labelTextColor(labelForToday->text().toFloat(), labelForToday);
+
+        labelForYesterday = LabelForYesterday;
+        labelForYesterday->setAlignment(Qt::AlignCenter);
+        labelTextColor(labelForYesterday->text().toFloat(), labelForYesterday);
+
+        labelForAnEntirePeriod = LabelForAnEntirePeriod;
+        labelForAnEntirePeriod->setAlignment(Qt::AlignCenter);
+        labelTextColor(labelForAnEntirePeriod->text().toFloat(), labelForAnEntirePeriod);
+
+        quantity = Quantity;
+        openBalance = OpenBalance;
+    }
+
+    void updateData(float value, float forToday, float forAnEntirePeriod){
+        labelValue->setText(QString::number(value));
+        oldValue = value;
+
+        labelForToday->setText(QString::number(forToday));
+        labelTextColor(forToday, labelForToday);
+        oldForToday = forToday;
+
+        labelForAnEntirePeriod->setText(QString::number(forAnEntirePeriod));
+        labelTextColor(forAnEntirePeriod, labelForAnEntirePeriod);
+        oldForEntirePeriod = forAnEntirePeriod;
+    }
+
+    void labelTextColor(float newValue, QLabel *label){
+        if(this->ticker == "Ticker") return;
+        if(newValue >= 0){
+            label->setStyleSheet("color: green;");
+        }else{
+            label->setStyleSheet("color: red;");
+        }
     }
 };
 
 std::vector<PositionField*> positionFieldsVector;
 int fieldsCount = 0;
 
-float roundFloat(float value){
+float roundFloat(float value)
+{
     value = roundf(value * 100) / 100;
     return value;
 }
@@ -61,14 +101,14 @@ TrayIconWidget::TrayIconWidget(QWidget *parent) :
     ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    createNewPole("Ticker", "Value","For Today", "For Yesterday", "For an entire period");
+    createNewPole("Ticker", "Value","For Today", "For Yesterday", "For an entire period", 0, 0);
 
     settings = new QSettings("AG", "TradernetWidget");
 
     std::thread requestThread(std::bind(&TrayIconWidget::initializeOpenPositions, this));
     requestThread.detach();
 
-    connect(this, SIGNAL(newPosition(QString,QString,QString,QString,QString)), this, SLOT(createNewPole(QString,QString,QString,QString,QString)));
+    connect(this, SIGNAL(newPosition(QString,QString,QString,QString,QString,int,float)), this, SLOT(createNewPole(QString,QString,QString,QString,QString,int,float)));
 }
 
 TrayIconWidget::~TrayIconWidget()
@@ -143,30 +183,7 @@ float* calculateData(int quantity, float openBalance, float currentPricePerOne, 
     return calculatedDataArray;
 }
 
-void TrayIconWidget::initializeOpenPositions()
-{
-    QByteArray output = requestToTradernetAPI();
-
-    QCoreApplication::processEvents();
-
-    if (!output.isEmpty()) {
-        std::vector<std::vector<QString>> receivedData = parseTradernetResponse(output);
-        for (const std::vector<QString>& tradernetDataVector : receivedData) {
-            std::string finhubData = getDataAboutPositionsFromFinhub(tradernetDataVector[0].toStdString());
-
-            if(finhubData != ""){
-                std::vector<float> parsedData = parseFinhubResponse(finhubData);
-                float *calculatedData = calculateData(tradernetDataVector[2].toFloat(), tradernetDataVector[1].toFloat(), parsedData[0], parsedData[1]);
-
-                emit newPosition(tradernetDataVector[0], QString::number(calculatedData[0]), QString::number(calculatedData[1]), tradernetDataVector[3], QString::number(calculatedData[2]));
-
-                delete[] calculatedData;
-            }
-        }
-    }
-}
-
-std::vector<float> TrayIconWidget::parseFinhubResponse(std::string response)
+std::vector<float> parseFinhubResponse(std::string response)
 {
     std::vector <float> parsedData;
     try {
@@ -183,6 +200,30 @@ std::vector<float> TrayIconWidget::parseFinhubResponse(std::string response)
         qDebug() << "Response parsing error: " << e.what();
         qDebug() << response;
     }
+}
+
+void TrayIconWidget::initializeOpenPositions()
+{
+    QByteArray output = requestToTradernetAPI();
+
+    if (!output.isEmpty()) {
+        std::vector<std::vector<QString>> receivedData = parseTradernetResponse(output);
+        for (const std::vector<QString>& tradernetDataVector : receivedData) {
+            std::string finhubData = getDataAboutPositionsFromFinhub(tradernetDataVector[0].toStdString());
+
+            if(finhubData != ""){
+                std::vector<float> parsedData = parseFinhubResponse(finhubData);
+                float *calculatedData = calculateData(tradernetDataVector[2].toInt(), tradernetDataVector[1].toFloat(), parsedData[0], parsedData[1]);
+
+                emit newPosition(tradernetDataVector[0], QString::number(calculatedData[0]), QString::number(calculatedData[1]), tradernetDataVector[3], QString::number(calculatedData[2]), tradernetDataVector[2].toInt(), tradernetDataVector[1].toFloat());
+
+                delete[] calculatedData;
+            }
+            QCoreApplication::processEvents();
+        }
+    }
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    upadtePositionsData();
 }
 
 static size_t writeCallback(void *contents, size_t size, size_t nmemb, void *userp)
@@ -217,8 +258,8 @@ std::string TrayIconWidget::getDataAboutPositionsFromFinhub(std::string ticker)
     }
 }
 
-void TrayIconWidget::createNewPole(QString ticker, QString value, QString forToday, QString forYesterday, QString forAnEntirePeriod)
-{    
+void TrayIconWidget::createNewPole(QString ticker, QString value, QString forToday, QString forYesterday, QString forAnEntirePeriod, int quantity, float openBalance)
+{
     QLabel *labelLogo = new QLabel("logo");
     QLabel *labelTicker = new QLabel(ticker);
     QLabel *labelValue = new QLabel(value);
@@ -226,11 +267,13 @@ void TrayIconWidget::createNewPole(QString ticker, QString value, QString forTod
     QLabel *labelForYesterday = new QLabel(forYesterday);
     QLabel *labelForAnEntirePeriod = new QLabel(forAnEntirePeriod);
 
+
     labelLogo->setPixmap(getPositionLogo(ticker));
     labelLogo->setScaledContents(true);
     labelLogo->setFixedSize(30,30);
 
-    PositionField *positionFiled = new PositionField(ticker, labelLogo, labelTicker, labelValue, labelForToday, labelForYesterday, labelForAnEntirePeriod);
+    PositionField *positionFiled = new PositionField(ticker, labelLogo, labelTicker, labelValue, labelForToday, labelForYesterday, labelForAnEntirePeriod, quantity, openBalance);
+
     positionFieldsVector.push_back(positionFiled);
 
     scrollLayout->addWidget(labelLogo, fieldsCount, 0);
@@ -245,7 +288,8 @@ void TrayIconWidget::createNewPole(QString ticker, QString value, QString forTod
     QCoreApplication::processEvents();
 }
 
-QPixmap TrayIconWidget::getPositionLogo(QString ticker){
+QPixmap TrayIconWidget::getPositionLogo(QString ticker)
+{
     QPixmap pixmap;
     QNetworkAccessManager *networkManager = new QNetworkAccessManager(this);
     ticker = ticker.toLower();
@@ -266,4 +310,23 @@ QPixmap TrayIconWidget::getPositionLogo(QString ticker){
 
     reply->deleteLater();
     return pixmap;
+}
+
+void TrayIconWidget::upadtePositionsData()
+{
+    std::string finhubData;
+    std::vector<float> parsedData;
+    float *calculatedData;
+    while(true){
+        for(int i = 1; i < positionFieldsVector.size(); i++){
+            finhubData = getDataAboutPositionsFromFinhub(positionFieldsVector[i]->ticker.toStdString());
+            if(finhubData != ""){
+                parsedData = parseFinhubResponse(finhubData);
+                calculatedData = calculateData(positionFieldsVector[i]->quantity, positionFieldsVector[i]->openBalance, parsedData[0], parsedData[1]);
+
+                positionFieldsVector[i]->updateData(calculatedData[0], calculatedData[1], calculatedData[2]);
+            }
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(15));
+    }
 }

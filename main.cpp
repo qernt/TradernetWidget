@@ -21,7 +21,6 @@ int main(int argc, char *argv[])
 
     trayMenu.setStyleSheet("QMenu::item { width: 20px; }");
 
-
     QWidgetAction* widgetAction = new QWidgetAction(nullptr);
     widgetAction->setDefaultWidget(trayIconWidget);
 

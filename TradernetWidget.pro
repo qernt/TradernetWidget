@@ -1,6 +1,7 @@
 QT       += core gui
 QT += core gui network
 LIBS += -lcurl
+LIBS += -L$$PWD/../../../opt/homebrew/Cellar/curl/8.0.1/include
 
 
 
@@ -33,3 +34,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     requestScript.py
+
+

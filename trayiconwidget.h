@@ -24,18 +24,18 @@ private:
     QByteArray requestToTradernetAPI();
     std::vector<std::vector<QString>> parseTradernetResponse(QByteArray JSON);
     void initializeOpenPositions();
-    std::vector<float> parseFinhubResponse(std::string response);
     std::string getDataAboutPositionsFromFinhub(std::string ticker);
     QPixmap getPositionLogo(QString ticker);
+    void upadtePositionsData();
 
 public:
     QSettings* settings;
 
 private slots:
-    void createNewPole(QString ticker, QString value,QString forToday, QString forYesterday,QString forAnEntierPeriod);
+    void createNewPole(QString ticker, QString value,QString forToday, QString forYesterday, QString forAnEntierPeriod, int quantity, float openBalance);
 
 signals:
-    void newPosition(QString ticker, QString value,QString forToday, QString forYesterday,QString forAnEntierPeriod);
+    void newPosition(QString ticker, QString value,QString forToday, QString forYesterday,QString forAnEntierPeriod, int quantity, float openBalance);
 
 private:
     Ui::TrayIconWidget *ui;

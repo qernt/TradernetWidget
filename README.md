@@ -1,9 +1,14 @@
 # Tradernet Widget
 
 ***
-__Idea__
+__About__
+This application allows you to track the current status of open positions with the Tradernet broker through the official API in a convenient user interface without the need to constantly visit the broker's website. The Tradernet API works in conjunction with the FinhubIO API, which provides up-to-date data on securities.
 
-Create an application based on the Tradernet broker's API for monitoring the broker account's status. All data will be displayed in the menu bar widget.
+Data updates occur every 15 seconds. The provided data has a 15-minute delay relative to the current price that can be seen in the broker's personal account. This delay is due to technical limitations when using the FinhubIO API.
+
+The data is located in the menu window in the top right corner on the menu bar
+
+<img src="https://i.imgur.com/tV1JSSv.png" width="300">
 
 ***
 __First start__
@@ -22,6 +27,8 @@ Python
 Qt
 
 curl
+
+JsonCPP
 
 Tradernet API(https://tradernet.global/tradernet-api/auth-api) 
 
