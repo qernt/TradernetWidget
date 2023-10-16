@@ -32,10 +32,10 @@ public:
     QSettings* settings;
 
 private slots:
-    void createNewPole(QString ticker, QString value,QString forToday, QString forYesterday, QString forAnEntierPeriod, int quantity, float openBalance);
+    void createNewPole(QString ticker, QString value,QString forToday, QString forYesterday, QString forAnEntierPeriod, int quantity, float openBalance, float floatForYesterday);
 
 signals:
-    void newPosition(QString ticker, QString value,QString forToday, QString forYesterday,QString forAnEntierPeriod, int quantity, float openBalance);
+    void newPosition(QString ticker, QString value,QString forToday, QString forYesterday,QString forAnEntierPeriod, int quantity, float openBalance, float floatForYesterday);
 
 private:
     Ui::TrayIconWidget *ui;
