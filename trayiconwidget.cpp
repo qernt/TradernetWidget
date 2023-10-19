@@ -12,6 +12,8 @@
 #include <curl/curl.h>
 #include <cmath>
 
+const std::string FINHUB_TOKEN = "ckiok21r01qlj9q75dk0ckiok21r01qlj9q75dkg";
+
 struct PositionField{
     QString ticker;
     int quantity;
@@ -236,7 +238,7 @@ std::string TrayIconWidget::getDataAboutPositionsFromFinhub(std::string ticker)
         ticker.erase(found, 3);
     }
 
-    std::string url = "https://finnhub.io/api/v1/quote?symbol=" + ticker + "&token=" + "ckiok21r01qlj9q75dk0ckiok21r01qlj9q75dkg"; //PUT_YOUR_FINHUB_API_TOKEN
+    std::string url = "https://finnhub.io/api/v1/quote?symbol=" + ticker + "&token=" +  TRADERNET_TOKEN;
 
     CURL *curl;
     CURLcode res;
