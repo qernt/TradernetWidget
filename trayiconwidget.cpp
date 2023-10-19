@@ -238,7 +238,7 @@ std::string TrayIconWidget::getDataAboutPositionsFromFinhub(std::string ticker)
         ticker.erase(found, 3);
     }
 
-    std::string url = "https://finnhub.io/api/v1/quote?symbol=" + ticker + "&token=" +  TRADERNET_TOKEN;
+    std::string url = "https://finnhub.io/api/v1/quote?symbol=" + ticker + "&token=" +  FINHUB_TOKEN ;
 
     CURL *curl;
     CURLcode res;
