@@ -15,6 +15,7 @@
 const std::string FINHUB_TOKEN = "ckiok21r01qlj9q75dk0ckiok21r01qlj9q75dkg";
 
 struct PositionField{
+private:
     QString ticker;
     int quantity;
     float openBalance;
@@ -30,6 +31,7 @@ struct PositionField{
     QLabel *labelForAnEntirePeriod;
     float oldForEntirePeriod;
 
+public:
     PositionField(QString Ticker, QLabel *LabelLogo = nullptr,QLabel *LabelTicker = nullptr, QLabel *LabelValue = nullptr, QLabel *LabelForToday = nullptr, QLabel *LabelForYesterday = nullptr, QLabel *LabelForAnEntirePeriod = nullptr, int Quantity = 0, float OpenBalance = 0, float ForYesterday = 0){
         ticker = Ticker;
         labelLogo = LabelLogo;
@@ -77,6 +79,18 @@ struct PositionField{
             label->setStyleSheet("color: red;");
         }
     }
+
+    QString getTicker() const;
+    void setTicker(const QString &newTicker);
+
+    int getQuantity() const;
+    void setQuantity(int newQuantity);
+
+    float getOpenBalance() const;
+    void setOpenBalance(float newOpenBalance);
+
+    float getForYesterday() const;
+    void setForYesterday(float newForYesterday);
 };
 
 std::vector<PositionField*> positionFieldsVector;
@@ -241,7 +255,6 @@ std::string TrayIconWidget::getDataAboutPositionsFromFinhub(std::string ticker)
     std::string url = "https://finnhub.io/api/v1/quote?symbol=" + ticker + "&token=" +  FINHUB_TOKEN ;
 
     CURL *curl;
-    CURLcode res;
     std::string readBuffer;
 
     curl = curl_easy_init();
@@ -249,12 +262,13 @@ std::string TrayIconWidget::getDataAboutPositionsFromFinhub(std::string ticker)
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        res = curl_easy_perform(curl);
+        curl_easy_perform(curl);
 
         curl_easy_cleanup(curl);
 
         return readBuffer;
     }
+    return nullptr;
 }
 
 void TrayIconWidget::createNewPole(QString ticker, QString value, QString forToday, QString forYesterday, QString forAnEntirePeriod, int quantity, float openBalance, float floatForYesterday)
@@ -318,14 +332,54 @@ void TrayIconWidget::upadtePositionsData()
     float *calculatedData;
     while(true){
         for(int i = 1; i < positionFieldsVector.size(); i++){
-            finhubData = getDataAboutPositionsFromFinhub(positionFieldsVector[i]->ticker.toStdString());
+            finhubData = getDataAboutPositionsFromFinhub(positionFieldsVector[i]->getTicker().toStdString());
             if(finhubData != ""){
                 parsedData = parseFinhubResponse(finhubData);
-                calculatedData = calculateData(positionFieldsVector[i]->quantity, positionFieldsVector[i]->openBalance, parsedData, positionFieldsVector[i]->forYesterday);
+                calculatedData = calculateData(positionFieldsVector[i]->getQuantity(), positionFieldsVector[i]->getOpenBalance(), parsedData, positionFieldsVector[i]->getForYesterday());
 
                 positionFieldsVector[i]->updateData(calculatedData[0], calculatedData[1], calculatedData[2]);
             }
         }
         std::this_thread::sleep_for(std::chrono::seconds(15));
     }
+}
+
+int PositionField::getQuantity() const
+{
+    return quantity;
+}
+
+void PositionField::setQuantity(int newQuantity)
+{
+    quantity = newQuantity;
+}
+
+float PositionField::getOpenBalance() const
+{
+    return openBalance;
+}
+
+void PositionField::setOpenBalance(float newOpenBalance)
+{
+    openBalance = newOpenBalance;
+}
+
+float PositionField::getForYesterday() const
+{
+    return forYesterday;
+}
+
+void PositionField::setForYesterday(float newForYesterday)
+{
+    forYesterday = newForYesterday;
+}
+
+QString PositionField::getTicker() const
+{
+    return ticker;
+}
+
+void PositionField::setTicker(const QString &newTicker)
+{
+    ticker = newTicker;
 }
