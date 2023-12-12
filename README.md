@@ -14,7 +14,7 @@ The data is located in the menu window in the top right corner on the menu bar
 ***
 __First start__
 1. Download all the files.
-2. Open "trayiconwidget.cpp" and set up your FinhubAPI key in "getDataAboutPositionsFromFinhub" function.
+2. Open "trayiconwidget.cpp" and set up your FinhubAPI key in "FINHUB_TOKEN" field.
 3. Start program and open the settings window. You need to set up your public and private TradernetAPI keys.
 4. Restart the program.
 

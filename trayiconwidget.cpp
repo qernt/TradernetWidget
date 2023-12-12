@@ -12,7 +12,7 @@
 #include <curl/curl.h>
 #include <cmath>
 
-const std::string FINHUB_TOKEN = "ckiok21r01qlj9q75dk0ckiok21r01qlj9q75dkg";
+const std::string FINHUB_TOKEN = "YOUR_FINHUB_TOKEN";
 
 struct PositionField{
 private:
@@ -80,17 +80,34 @@ public:
         }
     }
 
-    QString getTicker() const;
-    void setTicker(const QString &newTicker);
+    QString getTicker() const{
+        return ticker;
+    }
 
-    int getQuantity() const;
-    void setQuantity(int newQuantity);
+    void setTicker(const QString &newTicker){
+        ticker = newTicker;
+    }
 
-    float getOpenBalance() const;
-    void setOpenBalance(float newOpenBalance);
+    int getQuantity() const{
+        return quantity;
+    }
+    void setQuantity(int newQuantity){
+        quantity = newQuantity;
+    }
 
-    float getForYesterday() const;
-    void setForYesterday(float newForYesterday);
+    float getOpenBalance() const{
+        return openBalance;
+    }
+    void setOpenBalance(float newOpenBalance){
+        openBalance = newOpenBalance;
+    }
+
+    float getForYesterday() const{
+        return forYesterday;
+    }
+    void setForYesterday(float newForYesterday){
+        forYesterday = newForYesterday;
+    }
 };
 
 std::vector<PositionField*> positionFieldsVector;
@@ -342,44 +359,4 @@ void TrayIconWidget::upadtePositionsData()
         }
         std::this_thread::sleep_for(std::chrono::seconds(15));
     }
-}
-
-int PositionField::getQuantity() const
-{
-    return quantity;
-}
-
-void PositionField::setQuantity(int newQuantity)
-{
-    quantity = newQuantity;
-}
-
-float PositionField::getOpenBalance() const
-{
-    return openBalance;
-}
-
-void PositionField::setOpenBalance(float newOpenBalance)
-{
-    openBalance = newOpenBalance;
-}
-
-float PositionField::getForYesterday() const
-{
-    return forYesterday;
-}
-
-void PositionField::setForYesterday(float newForYesterday)
-{
-    forYesterday = newForYesterday;
-}
-
-QString PositionField::getTicker() const
-{
-    return ticker;
-}
-
-void PositionField::setTicker(const QString &newTicker)
-{
-    ticker = newTicker;
 }
